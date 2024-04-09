@@ -70,7 +70,7 @@ model = Prestadores %>%
     fecha_radicacion = ymd(fecha_radicacion),  # Convertir al formato de fecha
     fecha_vencimiento = ymd(fecha_vencimiento),  # Convertir al formato de fecha
     periodo_validez = as.numeric(difftime(fecha_vencimiento, fecha_radicacion, units = "days")))  
-  
+
 model$dv= as.numeric(model$dv)
 # Ajustar un modelo lineal mixto generalizado usando 'glmer' y mostrar el resumen del modelo.
 Obj3.fit.1 <- glmer(clase_personaBi ~  periodo_validez+dv+
@@ -85,7 +85,7 @@ summary(a)
 # con jitter para 'clase_persona' y 'periodo_validez'. El segundo mejora estéticamente
 # el primero y añade colores a los puntos y violines según 'clase_persona', además de
 # organizar los paneles de facetas por 'Region'.
-plot = ggplot(model, aes(x = factor(clase_personaBi), y = periodo_validez, fill = factor(clase_persona))) + 
+plot1 = ggplot(model, aes(x = factor(clase_personaBi), y = periodo_validez, fill = factor(clase_persona))) + 
   geom_violin(trim = FALSE) + 
   scale_fill_manual(values = c("blue", "orange")) + 
   facet_wrap(~ Region, scales = "free_y", ncol = 2) + 
@@ -96,10 +96,10 @@ plot = ggplot(model, aes(x = factor(clase_personaBi), y = periodo_validez, fill 
 
 
 # Guarda el gráfico creado en la ubicación especificada como un archivo JPEG
-ggsave("C:/Users/ccristbo/Dropbox (University of Michigan)/carlos/Work/ADRES/ADRES/descripcion.jpeg", 
-       plot, width = 10, height = 6, dpi = 300)
+ggsave("C:/Users/ccristbo/Dropbox (University of Michigan)/carlos/Work/ADRES/ADRES/descripcion1.jpeg", 
+       plot1, width = 10, height = 6, dpi = 300)
 
-plot = ggplot(model, aes(x = factor(clase_personaBi), y = dv, fill = factor(clase_persona))) + 
+plot2 = ggplot(model, aes(x = factor(clase_personaBi), y = dv, fill = factor(clase_persona))) + 
   geom_violin(trim = FALSE) + 
   scale_fill_manual(values = c("blue", "orange")) + 
   facet_wrap(~ Region, scales = "free_y", ncol = 2) + 
@@ -108,12 +108,6 @@ plot = ggplot(model, aes(x = factor(clase_personaBi), y = dv, fill = factor(clas
   theme_minimal() +
   theme(legend.position = "none", strip.text.x = element_text(angle = 0))
 
-
-
-wide_df <- model %>% 
-  group_by(Region, clase_persona, dv) %>%
-  summarise(count = n(), .groups = 'drop_last') %>%
-  pivot_wider(names_from = Region, values_from = count, values_fill = 0) %>%
-  rename_with(~ gsub("^Región ", "", .x), starts_with("Región"))
-
-wide_df
+# Guarda el gráfico creado en la ubicación especificada como un archivo JPEG
+ggsave("C:/Users/ccristbo/Dropbox (University of Michigan)/carlos/Work/ADRES/ADRES/descripcion2.jpeg", 
+       plot2, width = 10, height = 6, dpi = 300)
